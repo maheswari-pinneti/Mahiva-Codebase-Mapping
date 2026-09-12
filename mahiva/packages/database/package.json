@@ -7,5 +7,12 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --build"
+  },
+  "dependencies": {
+    "@mahiva/shared": "workspace:*",
+    "better-sqlite3": "^11.7.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0"
   }
 }

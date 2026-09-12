@@ -113,6 +113,169 @@ export const RustDefinition: LanguageDefinition = {
   },
 };
 
+export const JavaDefinition: LanguageDefinition = {
+  id: Language.JAVA,
+  displayName: "Java",
+  extensions: [".java"],
+  singleLineComment: "//",
+  multiLineComment: { start: "/*", end: "*/" },
+  treeSitterGrammarName: "tree-sitter-java",
+  supportsCompilerApi: false,
+  queryPatterns: {
+    classes: `(class_declaration name: (identifier) @name) @class`,
+    interfaces: `(interface_declaration name: (identifier) @name) @interface`,
+    imports: `(import_declaration) @import`,
+    calls: `(method_invocation name: (identifier) @call)`,
+  },
+};
+
+export const CDefinition: LanguageDefinition = {
+  id: Language.C,
+  displayName: "C",
+  extensions: [".c", ".h"],
+  singleLineComment: "//",
+  multiLineComment: { start: "/*", end: "*/" },
+  treeSitterGrammarName: "tree-sitter-c",
+  supportsCompilerApi: false,
+  queryPatterns: {
+    functions: `(function_definition name: (identifier) @name) @function`,
+    classes: `(struct_specifier name: (type_identifier) @name) @class`,
+    imports: `(preproc_include) @import`,
+    calls: `(call_expression function: (identifier) @call)`,
+  },
+};
+
+export const CPPDefinition: LanguageDefinition = {
+  id: Language.CPP,
+  displayName: "C++",
+  extensions: [".cpp", ".cc", ".cxx", ".hpp", ".hh", ".hxx"],
+  singleLineComment: "//",
+  multiLineComment: { start: "/*", end: "*/" },
+  treeSitterGrammarName: "tree-sitter-cpp",
+  supportsCompilerApi: false,
+  queryPatterns: {
+    functions: `(function_definition name: (identifier) @name) @function`,
+    classes: `(class_specifier name: (type_identifier) @name) @class`,
+    interfaces: `(struct_specifier name: (type_identifier) @name) @interface`,
+    imports: `(preproc_include) @import`,
+    calls: `(call_expression function: (identifier) @call)`,
+  },
+};
+
+export const CSharpDefinition: LanguageDefinition = {
+  id: Language.CSHARP,
+  displayName: "C#",
+  extensions: [".cs"],
+  singleLineComment: "//",
+  multiLineComment: { start: "/*", end: "*/" },
+  treeSitterGrammarName: "tree-sitter-c-sharp",
+  supportsCompilerApi: false,
+  queryPatterns: {
+    classes: `(class_declaration name: (identifier) @name) @class`,
+    interfaces: `(interface_declaration name: (identifier) @name) @interface`,
+    imports: `(using_directive) @import`,
+    calls: `(invocation_expression function: (identifier) @call)`,
+  },
+};
+
+export const PHPDefinition: LanguageDefinition = {
+  id: Language.PHP,
+  displayName: "PHP",
+  extensions: [".php"],
+  singleLineComment: "//",
+  multiLineComment: { start: "/*", end: "*/" },
+  treeSitterGrammarName: "tree-sitter-php",
+  supportsCompilerApi: false,
+  queryPatterns: {
+    functions: `(function_definition name: (name) @name) @function`,
+    classes: `(class_declaration name: (name) @name) @class`,
+    imports: `(namespace_use_declaration) @import`,
+    calls: `(function_call_expression function: (name) @call)`,
+  },
+};
+
+export const RubyDefinition: LanguageDefinition = {
+  id: Language.RUBY,
+  displayName: "Ruby",
+  extensions: [".rb"],
+  singleLineComment: "#",
+  multiLineComment: { start: "=begin", end: "=end" },
+  treeSitterGrammarName: "tree-sitter-ruby",
+  supportsCompilerApi: false,
+  queryPatterns: {
+    functions: `(method name: (identifier) @name) @function`,
+    classes: `(class name: (constant) @name) @class`,
+    imports: `(command (identifier) @import)`,
+    calls: `(call receiver: (constant) @call)`,
+  },
+};
+
+export const KotlinDefinition: LanguageDefinition = {
+  id: Language.KOTLIN,
+  displayName: "Kotlin",
+  extensions: [".kt", ".kts"],
+  singleLineComment: "//",
+  multiLineComment: { start: "/*", end: "*/" },
+  treeSitterGrammarName: "tree-sitter-kotlin",
+  supportsCompilerApi: false,
+  queryPatterns: {
+    functions: `(function_declaration (simple_identifier) @name) @function`,
+    classes: `(class_declaration (type_identifier) @name) @class`,
+    interfaces: `(interface_declaration (type_identifier) @name) @interface`,
+    imports: `(import_list) @import`,
+    calls: `(call_expression (simple_identifier) @call)`,
+  },
+};
+
+export const SwiftDefinition: LanguageDefinition = {
+  id: Language.SWIFT,
+  displayName: "Swift",
+  extensions: [".swift"],
+  singleLineComment: "//",
+  multiLineComment: { start: "/*", end: "*/" },
+  treeSitterGrammarName: "tree-sitter-swift",
+  supportsCompilerApi: false,
+  queryPatterns: {
+    functions: `(function_declaration name: (simple_identifier) @name) @function`,
+    classes: `(class_declaration name: (type_identifier) @name) @class`,
+    interfaces: `(protocol_declaration name: (type_identifier) @name) @interface`,
+    imports: `(import_declaration) @import`,
+    calls: `(function_call_expression function: (simple_identifier) @call)`,
+  },
+};
+
+export const JSONDefinition: LanguageDefinition = {
+  id: Language.JSON,
+  displayName: "JSON",
+  extensions: [".json"],
+  singleLineComment: "//",
+  multiLineComment: { start: "/*", end: "*/" },
+  treeSitterGrammarName: "tree-sitter-json",
+  supportsCompilerApi: false,
+  queryPatterns: {},
+};
+
+export const YAMLDefinition: LanguageDefinition = {
+  id: Language.YAML,
+  displayName: "YAML",
+  extensions: [".yaml", ".yml"],
+  singleLineComment: "#",
+  treeSitterGrammarName: "tree-sitter-yaml",
+  supportsCompilerApi: false,
+  queryPatterns: {},
+};
+
+export const MarkdownDefinition: LanguageDefinition = {
+  id: Language.MARKDOWN,
+  displayName: "Markdown",
+  extensions: [".md", ".markdown"],
+  singleLineComment: "<!--",
+  multiLineComment: { start: "<!--", end: "-->" },
+  treeSitterGrammarName: "tree-sitter-markdown",
+  supportsCompilerApi: false,
+  queryPatterns: {},
+};
+
 export const BUILTIN_LANGUAGES: LanguageDefinition[] = [
   TypeScriptDefinition,
   TSXDefinition,
@@ -121,4 +284,15 @@ export const BUILTIN_LANGUAGES: LanguageDefinition[] = [
   PythonDefinition,
   GoDefinition,
   RustDefinition,
+  JavaDefinition,
+  CDefinition,
+  CPPDefinition,
+  CSharpDefinition,
+  PHPDefinition,
+  RubyDefinition,
+  KotlinDefinition,
+  SwiftDefinition,
+  JSONDefinition,
+  YAMLDefinition,
+  MarkdownDefinition,
 ];

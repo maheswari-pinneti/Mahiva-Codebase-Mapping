@@ -20,6 +20,10 @@ describe("@mahiva/languages - LanguageRegistry", () => {
     expect(registry.getByLanguage(Language.PYTHON)).toBeDefined();
     expect(registry.getByLanguage(Language.GO)).toBeDefined();
     expect(registry.getByLanguage(Language.RUST)).toBeDefined();
+    expect(registry.getByLanguage(Language.JAVA)).toBeDefined();
+    expect(registry.getByLanguage(Language.CPP)).toBeDefined();
+    expect(registry.getByLanguage(Language.JSON)).toBeDefined();
+    expect(registry.getByLanguage(Language.MARKDOWN)).toBeDefined();
   });
 
   it("resolves definitions by file path and extension", () => {
@@ -33,6 +37,15 @@ describe("@mahiva/languages - LanguageRegistry", () => {
 
     const rsDef = registry.getByFilePath("crates/engine/main.rs");
     expect(rsDef?.id).toBe(Language.RUST);
+
+    const javaDef = registry.getByFilePath("src/main/java/com/example/App.java");
+    expect(javaDef?.id).toBe(Language.JAVA);
+
+    const yamlDef = registry.getByFilePath("config/deploy.yaml");
+    expect(yamlDef?.id).toBe(Language.YAML);
+
+    const mdDef = registry.getByFilePath("docs/overview.md");
+    expect(mdDef?.id).toBe(Language.MARKDOWN);
   });
 
   it("supports dynamic registration of custom languages", () => {

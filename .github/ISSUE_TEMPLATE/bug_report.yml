@@ -1,0 +1,31 @@
+name: Bug report
+about: Report a reproducible bug in Mahiva
+title: ""
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug description
+      description: What happened and what did you expect?
+      placeholder: Describe the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: 1. Run `...`
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Node, pnpm, OS, repository state, etc.
+    validations:
+      required: true

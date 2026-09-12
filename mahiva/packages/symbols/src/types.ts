@@ -14,5 +14,8 @@ export interface SymbolTable {
 }
 
 export interface ISymbolExtractor {
-  extractSymbols(parsedFile: ParsedSourceFile, options?: SymbolExtractionOptions): SymbolTable;
+  extractSymbols(
+    parsedFile: ParsedSourceFile,
+    options?: SymbolExtractionOptions,
+  ): SymbolTable;
 }

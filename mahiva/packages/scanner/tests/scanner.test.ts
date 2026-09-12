@@ -2,7 +2,12 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { CodebaseScanner, detectLanguage, isBinaryFile, isTestFile } from "../src/index.js";
+import {
+  CodebaseScanner,
+  detectLanguage,
+  isBinaryFile,
+  isTestFile,
+} from "../src/index.js";
 import { getDefaultConfig } from "@mahiva/config";
 import { Language } from "@mahiva/shared";
 
@@ -28,7 +33,9 @@ describe("@mahiva/scanner - Binary Detection", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "mahiva-scanner-binary-"));
+    tempDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "mahiva-scanner-binary-"),
+    );
   });
 
   afterEach(async () => {
@@ -40,7 +47,10 @@ describe("@mahiva/scanner - Binary Detection", () => {
     const binaryPath = path.join(tempDir, "image.png");
 
     await fs.writeFile(textPath, "export const value = 42;\n");
-    await fs.writeFile(binaryPath, Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x00, 0x01]));
+    await fs.writeFile(
+      binaryPath,
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x00, 0x01]),
+    );
 
     expect(await isBinaryFile(textPath)).toBe(false);
     expect(await isBinaryFile(binaryPath)).toBe(true);
@@ -64,9 +74,18 @@ describe("@mahiva/scanner - CodebaseScanner", () => {
     await fs.mkdir(path.join(tempDir, "src"), { recursive: true });
     await fs.mkdir(path.join(tempDir, "ignored-dir"), { recursive: true });
 
-    await fs.writeFile(path.join(tempDir, "src", "index.ts"), "export const a = 1;");
-    await fs.writeFile(path.join(tempDir, "src", "app.tsx"), "export const App = () => null;");
-    await fs.writeFile(path.join(tempDir, "ignored-dir", "secret.ts"), "export const s = 0;");
+    await fs.writeFile(
+      path.join(tempDir, "src", "index.ts"),
+      "export const a = 1;",
+    );
+    await fs.writeFile(
+      path.join(tempDir, "src", "app.tsx"),
+      "export const App = () => null;",
+    );
+    await fs.writeFile(
+      path.join(tempDir, "ignored-dir", "secret.ts"),
+      "export const s = 0;",
+    );
     await fs.writeFile(path.join(tempDir, ".gitignore"), "ignored-dir/\n");
 
     const config = {
@@ -84,5 +103,31 @@ describe("@mahiva/scanner - CodebaseScanner", () => {
     expect(paths).toContain("src/index.ts");
     expect(paths).toContain("src/app.tsx");
     expect(paths.some((p) => p.includes("ignored-dir"))).toBe(false);
+  });
+
+  it("respects .cbmignore patterns when scanning", async () => {
+    await fs.mkdir(path.join(tempDir, "src"), { recursive: true });
+    await fs.mkdir(path.join(tempDir, "generated"), { recursive: true });
+
+    await fs.writeFile(
+      path.join(tempDir, "src", "index.ts"),
+      "export const a = 1;",
+    );
+    await fs.writeFile(
+      path.join(tempDir, "generated", "artifact.ts"),
+      "export const generated = true;",
+    );
+    await fs.writeFile(path.join(tempDir, ".cbmignore"), "generated/\n");
+
+    const config = {
+      ...getDefaultConfig(),
+      root: tempDir,
+    };
+
+    const summary = await scanner.scan(config);
+    const paths = summary.files.map((f) => f.relativePath);
+
+    expect(paths).toContain("src/index.ts");
+    expect(paths.some((p) => p.includes("generated"))).toBe(false);
   });
 });

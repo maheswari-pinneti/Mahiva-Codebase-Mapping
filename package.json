@@ -1,0 +1,24 @@
+{
+  "name": "mahiva-codebase-mapping",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Deterministic Codebase Mapping and Developer Intelligence Platform",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@9.1.0",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build": "cd mahiva && pnpm build",
+    "clean": "cd mahiva && pnpm clean",
+    "format": "cd mahiva && pnpm format",
+    "format:check": "cd mahiva && pnpm format:check",
+    "lint": "cd mahiva && pnpm lint",
+    "lint:fix": "cd mahiva && pnpm exec eslint . --ext .ts --fix",
+    "test": "cd mahiva && pnpm test",
+    "test:watch": "cd mahiva && pnpm test:watch",
+    "typecheck": "cd mahiva && pnpm typecheck",
+    "package:check": "cd mahiva && pnpm pack --dry-run"
+  }
+}

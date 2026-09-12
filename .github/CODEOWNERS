@@ -1,0 +1,10 @@
+# Default owners for the Mahiva Codebase Mapping repository
+
+* @maheswari-pinneti
+
+/apps/cli/ @maheswari-pinneti
+/apps/server/ @maheswari-pinneti
+/apps/web/ @maheswari-pinneti
+/packages/* @maheswari-pinneti
+/docs/ @maheswari-pinneti
+/.github/ @maheswari-pinneti

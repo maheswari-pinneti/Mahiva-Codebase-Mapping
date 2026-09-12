@@ -8,9 +8,9 @@ export interface FileStats {
 }
 
 export interface WalkEntry {
-  path: string;            // Absolute normalized path
-  relativePath: string;    // Relative normalized path to root
-  name: string;            // File or directory name
+  path: string; // Absolute normalized path
+  relativePath: string; // Relative normalized path to root
+  name: string; // File or directory name
   stats: FileStats;
 }
 

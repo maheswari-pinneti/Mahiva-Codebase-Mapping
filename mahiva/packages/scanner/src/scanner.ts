@@ -8,7 +8,9 @@ import { detectLanguage, isTestFile } from "./classifier.js";
 
 // Ensure callable function reference regardless of CJS/ESM interop
 const getIgnoreInstance = (): Ignore => {
-  const fn = (createIgnore as unknown as { default?: () => Ignore }).default ?? createIgnore;
+  const fn =
+    (createIgnore as unknown as { default?: () => Ignore }).default ??
+    createIgnore;
   return (fn as unknown as () => Ignore)();
 };
 
@@ -31,18 +33,21 @@ export class CodebaseScanner {
     const startTime = Date.now();
     const rootPath = path.resolve(config.root);
     const gitignoreFilter = await this.buildGitignoreFilter(rootPath);
+    const cbmignoreFilter = await this.buildCbmignoreFilter(rootPath);
 
     const configIgnore = getIgnoreInstance();
     configIgnore.add(config.exclude);
 
     const files: FileDescriptor[] = [];
-    
-    const languageCounts = Object.values(Language).reduce<Record<Language, number>>(
+
+    const languageCounts = Object.values(Language).reduce<
+      Record<Language, number>
+    >(
       (acc, lang) => {
         acc[lang] = 0;
         return acc;
       },
-      {} as Record<Language, number>
+      {} as Record<Language, number>,
     );
 
     for await (const entry of this.fileSystem.walk(rootPath, {
@@ -53,14 +58,22 @@ export class CodebaseScanner {
         if (relPath.startsWith(".git") || relPath.startsWith("node_modules")) {
           return true;
         }
-        return configIgnore.ignores(relPath) || gitignoreFilter.ignores(relPath);
+        return (
+          configIgnore.ignores(relPath) ||
+          gitignoreFilter.ignores(relPath) ||
+          cbmignoreFilter.ignores(relPath)
+        );
       },
     })) {
       if (!entry.stats.isFile) continue;
 
       const relPath = entry.relativePath;
 
-      if (gitignoreFilter.ignores(relPath) || configIgnore.ignores(relPath)) {
+      if (
+        gitignoreFilter.ignores(relPath) ||
+        configIgnore.ignores(relPath) ||
+        cbmignoreFilter.ignores(relPath)
+      ) {
         continue;
       }
 
@@ -110,15 +123,26 @@ export class CodebaseScanner {
   }
 
   private async buildGitignoreFilter(rootPath: string): Promise<Ignore> {
-    const ig = getIgnoreInstance();
-    const gitignorePath = path.join(rootPath, ".gitignore");
+    return this.buildIgnoreFilter(rootPath, ".gitignore");
+  }
 
-    if (await this.fileSystem.exists(gitignorePath)) {
+  private async buildCbmignoreFilter(rootPath: string): Promise<Ignore> {
+    return this.buildIgnoreFilter(rootPath, ".cbmignore");
+  }
+
+  private async buildIgnoreFilter(
+    rootPath: string,
+    filename: string,
+  ): Promise<Ignore> {
+    const ig = getIgnoreInstance();
+    const ignorePath = path.join(rootPath, filename);
+
+    if (await this.fileSystem.exists(ignorePath)) {
       try {
-        const content = await this.fileSystem.readFile(gitignorePath);
+        const content = await this.fileSystem.readFile(ignorePath);
         ig.add(content);
       } catch {
-        // Skip unreadable .gitignore
+        // Skip unreadable ignore file
       }
     }
     return ig;

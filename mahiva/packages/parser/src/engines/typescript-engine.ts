@@ -1,5 +1,11 @@
 import * as ts from "typescript";
-import { Language, ParsedSourceFile, NormalizedAstNode, SourceRange, SymbolKind } from "@mahiva/shared";
+import {
+  Language,
+  ParsedSourceFile,
+  NormalizedAstNode,
+  SourceRange,
+  SymbolKind,
+} from "@mahiva/shared";
 import { IParserEngine, ParseOptions } from "../types.js";
 
 export class TypeScriptParserEngine implements IParserEngine {
@@ -23,14 +29,16 @@ export class TypeScriptParserEngine implements IParserEngine {
       sourceText,
       ts.ScriptTarget.Latest,
       true,
-      scriptKind
+      scriptKind,
     );
 
     let idSequence = 0;
     const generateId = () => `${filePath}#node_${++idSequence}`;
 
     const convertRange = (node: ts.Node): SourceRange => {
-      const start = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
+      const start = sourceFile.getLineAndCharacterOfPosition(
+        node.getStart(sourceFile),
+      );
       const end = sourceFile.getLineAndCharacterOfPosition(node.getEnd());
       return {
         start: {
@@ -46,7 +54,14 @@ export class TypeScriptParserEngine implements IParserEngine {
       };
     };
 
-    const mapNodeKind = (node: ts.Node): SymbolKind | "root" | "call_expression" | "import_clause" | "export_clause" => {
+    const mapNodeKind = (
+      node: ts.Node,
+    ):
+      | SymbolKind
+      | "root"
+      | "call_expression"
+      | "import_clause"
+      | "export_clause" => {
       if (ts.isSourceFile(node)) return "root";
       if (ts.isFunctionDeclaration(node)) return SymbolKind.FUNCTION;
       if (ts.isMethodDeclaration(node)) return SymbolKind.METHOD;
@@ -66,7 +81,11 @@ export class TypeScriptParserEngine implements IParserEngine {
 
     const getNodeName = (node: ts.Node): string => {
       if (ts.isSourceFile(node)) return filePath;
-      if ("name" in node && node.name && ts.isIdentifier(node.name as ts.Node)) {
+      if (
+        "name" in node &&
+        node.name &&
+        ts.isIdentifier(node.name as ts.Node)
+      ) {
         return (node.name as ts.Identifier).text;
       }
       return "anonymous";
@@ -104,10 +123,20 @@ export class TypeScriptParserEngine implements IParserEngine {
     };
   }
 
-  private resolveScriptKind(language: Language, filePath: string): ts.ScriptKind {
-    if (language === Language.TSX || filePath.endsWith(".tsx")) return ts.ScriptKind.TSX;
-    if (language === Language.JSX || filePath.endsWith(".jsx")) return ts.ScriptKind.JSX;
-    if (language === Language.JAVASCRIPT || filePath.endsWith(".js") || filePath.endsWith(".mjs")) return ts.ScriptKind.JS;
+  private resolveScriptKind(
+    language: Language,
+    filePath: string,
+  ): ts.ScriptKind {
+    if (language === Language.TSX || filePath.endsWith(".tsx"))
+      return ts.ScriptKind.TSX;
+    if (language === Language.JSX || filePath.endsWith(".jsx"))
+      return ts.ScriptKind.JSX;
+    if (
+      language === Language.JAVASCRIPT ||
+      filePath.endsWith(".js") ||
+      filePath.endsWith(".mjs")
+    )
+      return ts.ScriptKind.JS;
     return ts.ScriptKind.TS;
   }
 }

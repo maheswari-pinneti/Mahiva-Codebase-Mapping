@@ -33,13 +33,17 @@ app.get("/api/status", async () => {
   return getProjectStatus(process.cwd());
 });
 
-export async function getProjectStatus(projectRoot = process.cwd()): Promise<ProjectStatus> {
+export async function getProjectStatus(
+  projectRoot = process.cwd(),
+): Promise<ProjectStatus> {
   const loader = new ConfigLoader();
   const config = await loader.loadConfig(projectRoot);
   const scanner = new CodebaseScanner();
   const summary = await scanner.scan(config);
 
-  const parsedFiles = [] as Awaited<ReturnType<typeof defaultUnifiedParser.parse>>[];
+  const parsedFiles = [] as Awaited<
+    ReturnType<typeof defaultUnifiedParser.parse>
+  >[];
 
   for (const file of summary.files) {
     if (!defaultUnifiedParser.canParse(file.language)) {

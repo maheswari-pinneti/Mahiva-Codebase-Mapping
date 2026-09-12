@@ -6,7 +6,7 @@ import {
   Visibility,
   FileDescriptor,
   CodeSymbol,
-  SHARED_VERSION
+  SHARED_VERSION,
 } from "../src/index.js";
 
 describe("@mahiva/shared Domain Enums", () => {
@@ -42,7 +42,8 @@ describe("@mahiva/shared Entity Instantiation", () => {
       extension: ".ts",
       language: Language.TYPESCRIPT,
       sizeBytes: 1024,
-      contentHash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      contentHash:
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       isTestFile: false,
       isIgnored: false,
     };

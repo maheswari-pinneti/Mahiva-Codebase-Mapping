@@ -1,0 +1,11 @@
+# Root-level workspace
+node_modules/
+.DS_Store
+*.log
+
+# Nested monorepo outputs
+mahiva/node_modules/
+mahiva/**/dist/
+mahiva/**/coverage/
+mahiva/**/*.tsbuildinfo
+mahiva/.turbo/

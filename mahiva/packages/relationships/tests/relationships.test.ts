@@ -12,21 +12,30 @@ describe("@mahiva/relationships", () => {
         id: "root",
         kind: "root",
         name: "src/index.ts",
-        range: { start: { line: 1, column: 1, offset: 0 }, end: { line: 1, column: 1, offset: 0 } },
+        range: {
+          start: { line: 1, column: 1, offset: 0 },
+          end: { line: 1, column: 1, offset: 0 },
+        },
         children: [
           {
             id: "class-1",
             kind: SymbolKind.CLASS,
             name: "AuthService",
             metadata: { isExported: true },
-            range: { start: { line: 2, column: 1, offset: 0 }, end: { line: 5, column: 2, offset: 100 } },
+            range: {
+              start: { line: 2, column: 1, offset: 0 },
+              end: { line: 5, column: 2, offset: 100 },
+            },
             children: [
               {
                 id: "method-1",
                 kind: SymbolKind.METHOD,
                 name: "login",
                 metadata: { visibility: "public", isAsync: false },
-                range: { start: { line: 3, column: 3, offset: 10 }, end: { line: 4, column: 4, offset: 90 } },
+                range: {
+                  start: { line: 3, column: 3, offset: 10 },
+                  end: { line: 4, column: 4, offset: 90 },
+                },
                 children: [],
               },
             ],
@@ -41,9 +50,11 @@ describe("@mahiva/relationships", () => {
     const result = buildRelationships(parsedFile);
 
     expect(result.fileId).toBe("src/index.ts");
-    expect(result.edges).toEqual(expect.arrayContaining([
-      expect.objectContaining({ type: RelationshipType.CONTAINS }),
-    ]));
+    expect(result.edges).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: RelationshipType.CONTAINS }),
+      ]),
+    );
     expect(result.symbols[0]?.canonicalName).toBe("AuthService");
   });
 

@@ -18,8 +18,12 @@ describe("@mahiva/filesystem", () => {
   });
 
   it("normalizes paths across Windows and POSIX formats", () => {
-    expect(normalizePath("src\\components\\Button.tsx")).toBe("src/components/Button.tsx");
-    expect(normalizePath("src/components/Button.tsx")).toBe("src/components/Button.tsx");
+    expect(normalizePath("src\\components\\Button.tsx")).toBe(
+      "src/components/Button.tsx",
+    );
+    expect(normalizePath("src/components/Button.tsx")).toBe(
+      "src/components/Button.tsx",
+    );
     expect(normalizePath("")).toBe("");
   });
 
@@ -44,9 +48,18 @@ describe("@mahiva/filesystem", () => {
   });
 
   it("walks directories recursively while respecting skip filters", async () => {
-    await fileSystem.writeFile(path.join(tempDir, "src", "index.ts"), "export {}");
-    await fileSystem.writeFile(path.join(tempDir, "src", "utils", "helper.ts"), "export {}");
-    await fileSystem.writeFile(path.join(tempDir, "node_modules", "package", "index.js"), "{}");
+    await fileSystem.writeFile(
+      path.join(tempDir, "src", "index.ts"),
+      "export {}",
+    );
+    await fileSystem.writeFile(
+      path.join(tempDir, "src", "utils", "helper.ts"),
+      "export {}",
+    );
+    await fileSystem.writeFile(
+      path.join(tempDir, "node_modules", "package", "index.js"),
+      "{}",
+    );
 
     const discovered: string[] = [];
     for await (const entry of fileSystem.walk(tempDir, {
@@ -61,5 +74,26 @@ describe("@mahiva/filesystem", () => {
     expect(discovered).toContain("src/index.ts");
     expect(discovered).toContain("src/utils/helper.ts");
     expect(discovered.some((p) => p.includes("node_modules"))).toBe(false);
+  });
+
+  it("can follow symlinked directories when explicitly enabled", async () => {
+    const sourceDir = path.join(tempDir, "src");
+    const linkedDir = path.join(tempDir, "linked");
+
+    await fileSystem.writeFile(path.join(sourceDir, "index.ts"), "export {};");
+    await fs.symlink(sourceDir, linkedDir, "dir");
+
+    const discovered: string[] = [];
+    for await (const entry of fileSystem.walk(tempDir, {
+      recursive: true,
+      followSymlinks: true,
+    })) {
+      if (entry.stats.isFile) {
+        discovered.push(entry.relativePath);
+      }
+    }
+
+    expect(discovered).toContain("src/index.ts");
+    expect(discovered).toContain("linked/index.ts");
   });
 });

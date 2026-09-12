@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+coverage/
+.mahiva/
+.git/
+.vite/
+.cache/
+.DS_Store
+*.log

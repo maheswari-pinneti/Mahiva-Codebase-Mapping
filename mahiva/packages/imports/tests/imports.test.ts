@@ -11,7 +11,13 @@ describe("@mahiva/imports", () => {
       import auth from './auth';
     `;
 
-    const file = ts.createSourceFile("src/index.ts", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+    const file = ts.createSourceFile(
+      "src/index.ts",
+      source,
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TS,
+    );
 
     const imports = extractImports({
       fileId: "src/index.ts",
@@ -21,7 +27,10 @@ describe("@mahiva/imports", () => {
         id: "root",
         kind: "root",
         name: "src/index.ts",
-        range: { start: { line: 1, column: 1, offset: 0 }, end: { line: 1, column: 1, offset: 0 } },
+        range: {
+          start: { line: 1, column: 1, offset: 0 },
+          end: { line: 1, column: 1, offset: 0 },
+        },
         children: [],
       },
       rawAst: file,
@@ -40,7 +49,13 @@ describe("@mahiva/imports", () => {
       export default function app() {}
     `;
 
-    const file = ts.createSourceFile("src/index.ts", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+    const file = ts.createSourceFile(
+      "src/index.ts",
+      source,
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TS,
+    );
 
     const exports = extractExports({
       fileId: "src/index.ts",
@@ -50,7 +65,10 @@ describe("@mahiva/imports", () => {
         id: "root",
         kind: "root",
         name: "src/index.ts",
-        range: { start: { line: 1, column: 1, offset: 0 }, end: { line: 1, column: 1, offset: 0 } },
+        range: {
+          start: { line: 1, column: 1, offset: 0 },
+          end: { line: 1, column: 1, offset: 0 },
+        },
         children: [],
       },
       rawAst: file,

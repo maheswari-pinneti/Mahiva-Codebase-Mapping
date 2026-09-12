@@ -21,7 +21,9 @@ export class UnifiedParser {
     const engine = this.engines.find((e) => e.supports(options.language));
 
     if (!engine) {
-      throw new Error(`No parser engine available for language: ${options.language}`);
+      throw new Error(
+        `No parser engine available for language: ${options.language}`,
+      );
     }
 
     return engine.parse(options);

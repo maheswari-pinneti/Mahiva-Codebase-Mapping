@@ -6,7 +6,11 @@ import {
   Visibility,
 } from "@mahiva/shared";
 import { walkAst } from "@mahiva/ast";
-import { ISymbolExtractor, SymbolExtractionOptions, SymbolTable } from "../types.js";
+import {
+  ISymbolExtractor,
+  SymbolExtractionOptions,
+  SymbolTable,
+} from "../types.js";
 
 const VALID_SYMBOL_KINDS = new Set<string>([
   SymbolKind.FUNCTION,
@@ -25,13 +29,15 @@ const VALID_SYMBOL_KINDS = new Set<string>([
 export class AstSymbolExtractor implements ISymbolExtractor {
   public extractSymbols(
     parsedFile: ParsedSourceFile,
-    options: SymbolExtractionOptions = {}
+    options: SymbolExtractionOptions = {},
   ): SymbolTable {
     const symbols: CodeSymbol[] = [];
     const byCanonicalName = new Map<string, CodeSymbol>();
     const byKind = new Map<SymbolKind, CodeSymbol[]>();
 
-    const targetKinds = options.targetKinds ? new Set(options.targetKinds) : null;
+    const targetKinds = options.targetKinds
+      ? new Set(options.targetKinds)
+      : null;
     const includeAnonymous = options.includeAnonymous ?? false;
 
     walkAst(parsedFile.rootNode, (node: NormalizedAstNode, context) => {
@@ -69,8 +75,12 @@ export class AstSymbolExtractor implements ISymbolExtractor {
         canonicalName,
         kind,
         range: node.range,
-        signature: typeof node.metadata?.signature === "string" ? node.metadata.signature : undefined,
-        visibility: (node.metadata?.visibility as Visibility) ?? Visibility.PUBLIC,
+        signature:
+          typeof node.metadata?.signature === "string"
+            ? node.metadata.signature
+            : undefined,
+        visibility:
+          (node.metadata?.visibility as Visibility) ?? Visibility.PUBLIC,
         isExported: Boolean(node.metadata?.isExported ?? false),
         isAsync: Boolean(node.metadata?.isAsync ?? false),
         parentId: parentSymbol?.id,

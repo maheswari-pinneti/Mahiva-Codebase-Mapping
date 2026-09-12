@@ -1,6 +1,10 @@
 import path from "node:path";
 import { NodeFileSystem } from "@mahiva/filesystem";
-import { MahivaConfig, MahivaConfigSchema, MahivaConfigInput } from "./schema.js";
+import {
+  MahivaConfig,
+  MahivaConfigSchema,
+  MahivaConfigInput,
+} from "./schema.js";
 import { getDefaultConfig } from "./defaults.js";
 
 export class ConfigLoader {
@@ -11,10 +15,7 @@ export class ConfigLoader {
   }
 
   public async loadConfig(projectRoot: string): Promise<MahivaConfig> {
-    const configFilenames = [
-      "mahiva.config.json",
-      ".mahivarc.json",
-    ];
+    const configFilenames = ["mahiva.config.json", ".mahivarc.json"];
 
     for (const filename of configFilenames) {
       const fullPath = path.resolve(projectRoot, filename);
@@ -24,7 +25,9 @@ export class ConfigLoader {
           const parsedJson = JSON.parse(raw) as MahivaConfigInput;
           return MahivaConfigSchema.parse(parsedJson);
         } catch (error) {
-          throw new Error(`Failed to parse config at ${fullPath}: ${error instanceof Error ? error.message : String(error)}`);
+          throw new Error(
+            `Failed to parse config at ${fullPath}: ${error instanceof Error ? error.message : String(error)}`,
+          );
         }
       }
     }

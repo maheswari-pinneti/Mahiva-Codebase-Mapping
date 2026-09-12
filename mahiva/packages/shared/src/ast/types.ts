@@ -3,7 +3,8 @@ import { SourceRange } from "../domain/entities.js";
 
 export interface NormalizedAstNode {
   id: string;
-  kind: SymbolKind | "root" | "call_expression" | "import_clause" | "export_clause";
+  kind:
+    SymbolKind | "root" | "call_expression" | "import_clause" | "export_clause";
   name: string;
   range: SourceRange;
   parent?: string;

@@ -78,7 +78,8 @@ export class GitRepository {
     const raw = this.run(["status", "--short", "--branch"]);
     const lines = raw.split(/\r?\n/).filter(Boolean);
 
-    const statusLine = lines.find((line) => line.startsWith("## ")) ?? "## HEAD (no branch)";
+    const statusLine =
+      lines.find((line) => line.startsWith("## ")) ?? "## HEAD (no branch)";
     const branchMatch = statusLine.match(/^##\s+([^\s]+)/);
     const branch = branchMatch ? branchMatch[1] : "HEAD";
 
@@ -159,4 +160,3 @@ export function createGitRepository(rootPath = process.cwd()): GitRepository {
 }
 
 export const PACKAGE_NAME = "@mahiva/git";
-

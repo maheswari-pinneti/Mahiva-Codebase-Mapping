@@ -21,7 +21,9 @@ program
     const scanner = new CodebaseScanner();
     const summary = await scanner.scan(config);
 
-    console.log(`Scanned ${summary.totalFilesDiscovered} files from ${summary.repositoryRoot}`);
+    console.log(
+      `Scanned ${summary.totalFilesDiscovered} files from ${summary.repositoryRoot}`,
+    );
     console.log(JSON.stringify(summary.byLanguage, null, 2));
   });
 
@@ -34,17 +36,19 @@ program
     const scanner = new CodebaseScanner();
     const summary = await scanner.scan(config);
 
-    console.log(JSON.stringify(
-      {
-        service: "mahiva-cli",
-        status: "ready",
-        repositoryRoot: summary.repositoryRoot,
-        totalFilesDiscovered: summary.totalFilesDiscovered,
-        byLanguage: summary.byLanguage,
-      },
-      null,
-      2
-    ));
+    console.log(
+      JSON.stringify(
+        {
+          service: "mahiva-cli",
+          status: "ready",
+          repositoryRoot: summary.repositoryRoot,
+          totalFilesDiscovered: summary.totalFilesDiscovered,
+          byLanguage: summary.byLanguage,
+        },
+        null,
+        2,
+      ),
+    );
   });
 
 program.parse(process.argv);

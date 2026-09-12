@@ -34,7 +34,9 @@ export interface AnalysisSummary {
 export class CodebaseAnalyzer {
   private readonly symbolExtractor: AstSymbolExtractor;
 
-  public constructor(symbolExtractor: AstSymbolExtractor = new AstSymbolExtractor()) {
+  public constructor(
+    symbolExtractor: AstSymbolExtractor = new AstSymbolExtractor(),
+  ) {
     this.symbolExtractor = symbolExtractor;
   }
 
@@ -46,7 +48,7 @@ export class CodebaseAnalyzer {
     const exportedNames = new Set(
       exports
         .filter((statement) => !statement.isDefault)
-        .map((statement) => statement.exportedName)
+        .map((statement) => statement.exportedName),
     );
 
     const normalizedSymbols = symbolTable.symbols.map((symbol) => {
@@ -75,7 +77,9 @@ export class CodebaseAnalyzer {
       enrichedSymbolTable.byKind.set(symbol.kind, existing);
     }
 
-    const publicSymbols = normalizedSymbols.filter((symbol) => symbol.isExported);
+    const publicSymbols = normalizedSymbols.filter(
+      (symbol) => symbol.isExported,
+    );
     const localImports = imports.filter((statement) => !statement.isExternal);
 
     return {
@@ -105,9 +109,18 @@ export class CodebaseAnalyzer {
       files,
       byFileId,
       totalFiles: files.length,
-      totalSymbols: files.reduce((count, file) => count + file.symbols.length, 0),
-      totalImports: files.reduce((count, file) => count + file.imports.length, 0),
-      totalExports: files.reduce((count, file) => count + file.exports.length, 0),
+      totalSymbols: files.reduce(
+        (count, file) => count + file.symbols.length,
+        0,
+      ),
+      totalImports: files.reduce(
+        (count, file) => count + file.imports.length,
+        0,
+      ),
+      totalExports: files.reduce(
+        (count, file) => count + file.exports.length,
+        0,
+      ),
     };
   }
 }
@@ -118,7 +131,9 @@ export function analyzeParsedFile(parsedFile: ParsedSourceFile): FileAnalysis {
   return defaultAnalyzer.analyze(parsedFile);
 }
 
-export function analyzeParsedFiles(parsedFiles: ParsedSourceFile[]): AnalysisSummary {
+export function analyzeParsedFiles(
+  parsedFiles: ParsedSourceFile[],
+): AnalysisSummary {
   return defaultAnalyzer.analyzeMany(parsedFiles);
 }
 

@@ -16,7 +16,10 @@ export class ImportExtractor implements IImportExtractor {
     return [];
   }
 
-  private extractFromSourceFile(sourceFile: ts.SourceFile, fileId: string): ImportStatement[] {
+  private extractFromSourceFile(
+    sourceFile: ts.SourceFile,
+    fileId: string,
+  ): ImportStatement[] {
     const imports: ImportStatement[] = [];
 
     for (const statement of sourceFile.statements) {
@@ -61,7 +64,8 @@ export class ImportExtractor implements IImportExtractor {
         moduleSpecifier,
         resolvedFileId: undefined,
         isTypeOnly: importClause?.isTypeOnly ?? false,
-        isExternal: !moduleSpecifier.startsWith(".") && !moduleSpecifier.startsWith("/"),
+        isExternal:
+          !moduleSpecifier.startsWith(".") && !moduleSpecifier.startsWith("/"),
         symbols,
         range: this.toRange(sourceFile, statement.pos, statement.end),
       });
@@ -70,7 +74,9 @@ export class ImportExtractor implements IImportExtractor {
     return imports;
   }
 
-  private getModuleSpecifier(statement: ts.ImportDeclaration): string | undefined {
+  private getModuleSpecifier(
+    statement: ts.ImportDeclaration,
+  ): string | undefined {
     const moduleSpecifier = statement.moduleSpecifier;
 
     if (moduleSpecifier && ts.isStringLiteral(moduleSpecifier)) {
@@ -80,7 +86,11 @@ export class ImportExtractor implements IImportExtractor {
     return undefined;
   }
 
-  private toRange(sourceFile: ts.SourceFile, start: number, end: number): SourceRange {
+  private toRange(
+    sourceFile: ts.SourceFile,
+    start: number,
+    end: number,
+  ): SourceRange {
     const startPos = sourceFile.getLineAndCharacterOfPosition(start);
     const endPos = sourceFile.getLineAndCharacterOfPosition(end);
 
@@ -101,6 +111,8 @@ export class ImportExtractor implements IImportExtractor {
 
 export const defaultImportExtractor = new ImportExtractor();
 
-export function extractImports(parsedFile: ParsedSourceFile): ImportStatement[] {
+export function extractImports(
+  parsedFile: ParsedSourceFile,
+): ImportStatement[] {
   return defaultImportExtractor.extractImports(parsedFile);
 }

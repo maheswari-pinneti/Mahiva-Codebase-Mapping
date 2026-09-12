@@ -36,7 +36,7 @@ describe("@mahiva/config", () => {
 
     await fs.writeFile(
       path.join(tempDir, "mahiva.config.json"),
-      JSON.stringify(customConfig, null, 2)
+      JSON.stringify(customConfig, null, 2),
     );
 
     const loaded = await loader.loadConfig(tempDir);

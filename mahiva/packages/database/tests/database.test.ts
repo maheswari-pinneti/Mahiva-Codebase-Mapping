@@ -57,7 +57,9 @@ describe("@mahiva/database", () => {
       expect(second.getEdges()).toHaveLength(1);
 
       const persisted = readFileSync(dbPath);
-      expect(persisted.subarray(0, 15).toString("ascii")).toContain("SQLite format 3");
+      expect(persisted.subarray(0, 15).toString("ascii")).toContain(
+        "SQLite format 3",
+      );
 
       second.close();
       first.close();

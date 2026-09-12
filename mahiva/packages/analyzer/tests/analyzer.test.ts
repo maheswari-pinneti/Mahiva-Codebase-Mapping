@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import * as ts from "typescript";
+import { defaultUnifiedParser } from "@mahiva/parser";
 import { analyzeParsedFile, analyzeParsedFiles, CodebaseAnalyzer } from "../src/index.js";
 import { Language, SymbolKind } from "@mahiva/shared";
 
@@ -65,6 +66,26 @@ describe("@mahiva/analyzer", () => {
     expect(result.publicSymbols).toHaveLength(2);
     expect(result.hasDefaultExport).toBe(false);
     expect(result.importedModules).toContain("./types");
+  });
+
+  it("infers exported symbols from real parser output", async () => {
+    const source = `
+      export interface User { id: string; }
+      export class AuthService {
+        public login(): void {}
+      }
+    `;
+
+    const parsed = await defaultUnifiedParser.parse({
+      filePath: "src/index.ts",
+      sourceText: source,
+      language: Language.TYPESCRIPT,
+    });
+
+    const result = analyzeParsedFile(parsed);
+
+    expect(result.publicSymbols.map((symbol) => symbol.name)).toEqual(expect.arrayContaining(["User", "AuthService"]));
+    expect(result.exportedNames).toEqual(expect.arrayContaining(["User", "AuthService"]));
   });
 
   it("aggregates multiple parsed files into a summary", () => {

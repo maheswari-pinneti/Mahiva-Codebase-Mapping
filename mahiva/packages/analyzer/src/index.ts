@@ -43,7 +43,39 @@ export class CodebaseAnalyzer {
     const imports = extractImports(parsedFile);
     const exports = extractExports(parsedFile);
 
-    const publicSymbols = symbolTable.symbols.filter((symbol) => symbol.isExported);
+    const exportedNames = new Set(
+      exports
+        .filter((statement) => !statement.isDefault)
+        .map((statement) => statement.exportedName)
+    );
+
+    const normalizedSymbols = symbolTable.symbols.map((symbol) => {
+      const isLocallyExported =
+        symbol.isExported ||
+        (symbol.parentId === undefined && exportedNames.has(symbol.name));
+
+      return {
+        ...symbol,
+        isExported: isLocallyExported,
+      };
+    });
+
+    const enrichedSymbolTable: SymbolTable = {
+      fileId: symbolTable.fileId,
+      symbols: normalizedSymbols,
+      byCanonicalName: new Map<string, CodeSymbol>(),
+      byKind: new Map(),
+    };
+
+    for (const symbol of normalizedSymbols) {
+      enrichedSymbolTable.byCanonicalName.set(symbol.canonicalName, symbol);
+
+      const existing = enrichedSymbolTable.byKind.get(symbol.kind) ?? [];
+      existing.push(symbol);
+      enrichedSymbolTable.byKind.set(symbol.kind, existing);
+    }
+
+    const publicSymbols = normalizedSymbols.filter((symbol) => symbol.isExported);
     const localImports = imports.filter((statement) => !statement.isExternal);
 
     return {
@@ -51,8 +83,8 @@ export class CodebaseAnalyzer {
       language: parsedFile.language,
       imports,
       exports,
-      symbols: symbolTable.symbols,
-      symbolTable,
+      symbols: normalizedSymbols,
+      symbolTable: enrichedSymbolTable,
       publicSymbols,
       localImports,
       importedModules: imports.map((statement) => statement.moduleSpecifier),

@@ -2,8 +2,6 @@ import { describe, it, expect, beforeEach } from "vitest";
 import {
   LanguageRegistry,
   LanguageDefinition,
-  TypeScriptDefinition,
-  PythonDefinition,
   IGrammarLoader,
 } from "../src/index.js";
 import { Language } from "@mahiva/shared";

@@ -14,7 +14,7 @@ export class UnifiedParser {
   }
 
   public registerEngine(engine: IParserEngine): void {
-    this.engines.unshift(engine); // Register at the beginning so newer engines have higher priority
+    this.engines.push(engine); // Preserve the constructor registration order so specialized engines take precedence
   }
 
   public async parse(options: ParseOptions): Promise<ParsedSourceFile> {

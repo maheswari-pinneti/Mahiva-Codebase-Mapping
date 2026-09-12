@@ -34,9 +34,6 @@ export class AstSymbolExtractor implements ISymbolExtractor {
     const targetKinds = options.targetKinds ? new Set(options.targetKinds) : null;
     const includeAnonymous = options.includeAnonymous ?? false;
 
-    // Track enclosing scopes for hierarchical naming (e.g. ClassName.methodName)
-    const scopeStack: string[] = [];
-
     walkAst(parsedFile.rootNode, (node: NormalizedAstNode, context) => {
       // Only process recognized SymbolKinds
       if (!VALID_SYMBOL_KINDS.has(node.kind)) {

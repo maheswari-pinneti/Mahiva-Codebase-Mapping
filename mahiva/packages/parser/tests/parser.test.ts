@@ -94,5 +94,7 @@ describe("@mahiva/parser - UnifiedParser Router", () => {
       language: Language.TYPESCRIPT,
     });
     expect(tsResult.rootNode).toBeDefined();
+    expect(tsResult.rootNode.children.length).toBeGreaterThan(0);
+    expect(tsResult.rootNode.children[0]?.kind).toBe(SymbolKind.VARIABLE);
   });
 });

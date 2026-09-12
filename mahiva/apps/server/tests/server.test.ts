@@ -6,11 +6,15 @@ describe("@mahiva/server", () => {
     expect(PACKAGE_NAME).toBe("@mahiva/server");
   });
 
-  it("builds a project status payload using the configured scanner pipeline", async () => {
+  it("builds a project status payload using the configured engine pipeline", async () => {
     const status = await getProjectStatus(process.cwd());
 
     expect(status.service).toBe("mahiva-server");
     expect(status.status).toBe("ready");
-    expect(status.totalFilesDiscovered).toBeGreaterThanOrEqual(0);
+    expect(status.totalFilesDiscovered).toBeGreaterThan(0);
+    expect(status.filesParsed).toBeGreaterThan(0);
+    expect(status.totalSymbols).toBeGreaterThan(0);
+    expect(status.graphNodeCount).toBeGreaterThan(0);
+    expect(status.graphEdgeCount).toBeGreaterThanOrEqual(0);
   });
 });

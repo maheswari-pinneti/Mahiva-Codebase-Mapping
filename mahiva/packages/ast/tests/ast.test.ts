@@ -7,7 +7,7 @@ import {
   getDescendants,
   AstNormalizer,
 } from "../src/index.js";
-import { NormalizedAstNode, SymbolKind } from "@mahiva/shared";
+import { Language, NormalizedAstNode, SymbolKind } from "@mahiva/shared";
 
 describe("@mahiva/ast - AST Normalization & Selectors", () => {
   const dummyTree: NormalizedAstNode = {
@@ -68,7 +68,7 @@ describe("@mahiva/ast - AST Normalization & Selectors", () => {
     const cloned = AstNormalizer.cloneNode(dummyTree);
     AstNormalizer.normalize({
       fileId: "src/auth.ts",
-      language: "typescript" as any,
+      language: Language.TYPESCRIPT,
       contentHash: "hash123",
       rootNode: cloned,
     });

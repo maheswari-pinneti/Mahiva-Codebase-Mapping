@@ -1,4 +1,4 @@
-import { Language, ParsedSourceFile, NormalizedAstNode, SourceRange, SymbolKind } from "@mahiva/shared";
+import { Language, ParsedSourceFile, NormalizedAstNode, SourceRange } from "@mahiva/shared";
 import { LanguageRegistry, defaultLanguageRegistry } from "@mahiva/languages";
 import { IParserEngine, ParseOptions } from "../types.js";
 

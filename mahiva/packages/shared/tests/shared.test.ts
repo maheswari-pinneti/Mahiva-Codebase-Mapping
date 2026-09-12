@@ -3,7 +3,6 @@ import {
   Language,
   SymbolKind,
   RelationshipType,
-  NodeType,
   Visibility,
   FileDescriptor,
   CodeSymbol,

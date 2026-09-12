@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { createDatabase } from "@mahiva/database";
 import { QueryEngine, createQueryEngine } from "../src/index.js";
-import { NodeType } from "@mahiva/shared";
+import { NodeType, RelationshipType } from "@mahiva/shared";
 
 describe("@mahiva/query", () => {
   it("queries nodes and edges from the database", () => {
@@ -19,7 +19,7 @@ describe("@mahiva/query", () => {
       id: "edge-1",
       source: "file-a",
       target: "file-b",
-      type: "IMPORTS" as any,
+      type: RelationshipType.IMPORTS,
       weight: 1,
     });
 

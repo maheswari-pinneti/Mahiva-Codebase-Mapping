@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildGraph, GraphModel } from "../src/index.js";
-import { RelationshipType, SymbolKind, Language } from "@mahiva/shared";
+import { NodeType, RelationshipType } from "@mahiva/shared";
 
 describe("@mahiva/graph", () => {
   it("builds a graph from relationship results and verifies traversal", () => {
@@ -42,7 +42,7 @@ describe("@mahiva/graph", () => {
 
     graph.addNode({
       id: "A",
-      type: "file" as any,
+      type: NodeType.FILE,
       name: "A",
       path: "A",
       fileId: "A",

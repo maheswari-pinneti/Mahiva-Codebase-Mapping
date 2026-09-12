@@ -3,7 +3,7 @@ import { readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createDatabase, InMemoryDatabase } from "../src/index.js";
-import { NodeType } from "@mahiva/shared";
+import { NodeType, RelationshipType } from "@mahiva/shared";
 
 describe("@mahiva/database", () => {
   it("persists nodes and edges in memory", () => {
@@ -21,7 +21,7 @@ describe("@mahiva/database", () => {
       id: "edge-1",
       source: "file-a",
       target: "file-b",
-      type: "IMPORTS" as any,
+      type: RelationshipType.IMPORTS,
       weight: 1,
     });
 
@@ -47,7 +47,7 @@ describe("@mahiva/database", () => {
         id: "edge-2",
         source: "file-b",
         target: "file-c",
-        type: "IMPORTS" as any,
+        type: RelationshipType.IMPORTS,
         weight: 1,
       });
 

@@ -1,13 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { AstSymbolExtractor } from "../src/index.js";
-import { ParsedSourceFile, SymbolKind, Visibility } from "@mahiva/shared";
+import { Language, ParsedSourceFile, SymbolKind, Visibility } from "@mahiva/shared";
 
 describe("@mahiva/symbols - AstSymbolExtractor", () => {
   const extractor = new AstSymbolExtractor();
 
   const mockParsedFile: ParsedSourceFile = {
     fileId: "src/auth/service.ts",
-    language: "typescript" as any,
+    language: Language.TYPESCRIPT,
     contentHash: "hash-abc-123",
     rootNode: {
       id: "src/auth/service.ts#root",

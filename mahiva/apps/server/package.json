@@ -13,6 +13,10 @@
     "@mahiva/query": "workspace:*",
     "@mahiva/config": "workspace:*",
     "@mahiva/scanner": "workspace:*",
+    "@mahiva/parser": "workspace:*",
+    "@mahiva/analyzer": "workspace:*",
+    "@mahiva/relationships": "workspace:*",
+    "@mahiva/graph": "workspace:*",
     "fastify": "^5.0.0"
   }
 }

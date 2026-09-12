@@ -12,6 +12,7 @@ export default defineConfig({
       "@mahiva/languages": path.resolve(__dirname, "packages/languages/src/index.ts"),
       "@mahiva/parser": path.resolve(__dirname, "packages/parser/src/index.ts"),
       "@mahiva/ast": path.resolve(__dirname, "packages/ast/src/index.ts"),
+      "@mahiva/symbols": path.resolve(__dirname, "packages/symbols/src/index.ts"),
     },
   },
   test: {

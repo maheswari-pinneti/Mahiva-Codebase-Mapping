@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import Fastify from "fastify";
+import rateLimit from "@fastify/rate-limit";
 import { ConfigLoader } from "@mahiva/config";
 import { CodebaseScanner } from "@mahiva/scanner";
 import { defaultUnifiedParser } from "@mahiva/parser";
@@ -23,6 +24,11 @@ export interface ProjectStatus {
 
 const app = Fastify({
   logger: true,
+});
+
+await app.register(rateLimit, {
+  max: 100,
+  timeWindow: "1 minute",
 });
 
 app.get("/health", async () => {

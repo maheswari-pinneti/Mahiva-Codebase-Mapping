@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import { Command } from "commander";
 import { ConfigLoader } from "@mahiva/config";
@@ -51,6 +51,51 @@ program
     );
   });
 
+program
+  .command("analyze")
+  .argument("[path]", "codebase directory", ".")
+  .description("analyze a codebase")
+  .action(async (targetPath: string) => {
+    const { CodebaseScanner } = await import("@mahiva/scanner");
+    const { loadConfig } = await import("@mahiva/config");
+
+    const root = path.resolve(targetPath);
+    const config = await loadConfig(root);
+
+    const scanner = new CodebaseScanner();
+    const result = await scanner.scan(config);
+
+    console.log("");
+    console.log("Mahiva Codebase Analysis");
+    console.log("========================");
+    console.log("");
+    console.log(`Repository: ${result.repositoryRoot}`);
+    console.log(`Files analyzed: ${result.totalFilesDiscovered}`);
+    console.log(`Directories: ${result.totalDirectories}`);
+    console.log("");
+
+    console.log("Languages:");
+    for (const [language, count] of Object.entries(result.byLanguage)) {
+      if (count > 0) {
+        console.log(`  ${language}: ${count}`);
+      }
+    }
+
+    console.log("");
+
+    console.log("Extensions:");
+    for (const [extension, count] of Object.entries(result.byExtension)) {
+      console.log(`  ${extension}: ${count}`);
+    }
+
+    console.log("");
+
+    console.log(`Total bytes: ${result.statistics.totalBytes}`);
+    console.log(`Binary files skipped: ${result.statistics.binaryFiles}`);
+    console.log(`Oversized files skipped: ${result.statistics.oversizedFiles}`);
+    console.log(`Duration: ${result.durationMs}ms`);
+    console.log("");
+  });
 program.parse(process.argv);
 
 export const PACKAGE_NAME = "@mahiva/cli";

@@ -1,26 +1,22 @@
-import path from "node:path";
+﻿import path from "node:path";
 import createIgnore, { type Ignore } from "ignore";
+
 import { NodeFileSystem, normalizePath } from "@mahiva/filesystem";
 import { FileDescriptor, Language } from "@mahiva/shared";
 import { MahivaConfig } from "@mahiva/config";
+
 import { isBinaryFile } from "./binary.js";
 import { detectLanguage, isTestFile } from "./classifier.js";
+import { isDefaultIgnoredPath } from "./ignore.js";
+import type { ScanStatistics, ScanSummary } from "./types.js";
 
-// Ensure callable function reference regardless of CJS/ESM interop
 const getIgnoreInstance = (): Ignore => {
   const fn =
     (createIgnore as unknown as { default?: () => Ignore }).default ??
     createIgnore;
+
   return (fn as unknown as () => Ignore)();
 };
-
-export interface ScanSummary {
-  repositoryRoot: string;
-  totalFilesDiscovered: number;
-  byLanguage: Record<Language, number>;
-  files: FileDescriptor[];
-  durationMs: number;
-}
 
 export class CodebaseScanner {
   private fileSystem: NodeFileSystem;
@@ -32,6 +28,7 @@ export class CodebaseScanner {
   public async scan(config: MahivaConfig): Promise<ScanSummary> {
     const startTime = Date.now();
     const rootPath = path.resolve(config.root);
+
     const gitignoreFilter = await this.buildGitignoreFilter(rootPath);
 
     const configIgnore = getIgnoreInstance();
@@ -39,49 +36,90 @@ export class CodebaseScanner {
 
     const files: FileDescriptor[] = [];
 
-    const languageCounts = Object.values(Language).reduce<
-      Record<Language, number>
-    >(
-      (acc, lang) => {
-        acc[lang] = 0;
-        return acc;
-      },
-      {} as Record<Language, number>,
-    );
+    const languageCounts = this.createLanguageCounts();
+    const extensionCounts: Record<string, number> = {};
+
+    const statistics: ScanStatistics = {
+      totalFiles: 0,
+      totalDirectories: 0,
+      totalBytes: 0,
+      ignoredFiles: 0,
+      ignoredDirectories: 0,
+      binaryFiles: 0,
+      oversizedFiles: 0,
+      byLanguage: languageCounts,
+      byExtension: extensionCounts,
+    };
 
     for await (const entry of this.fileSystem.walk(rootPath, {
       recursive: true,
       followSymlinks: config.followSymlinks,
       skip: (relPath: string) => {
-        if (!relPath) return false;
-        if (relPath.startsWith(".git") || relPath.startsWith("node_modules")) {
+        if (!relPath) {
+          return false;
+        }
+
+        const normalizedPath = relPath.replace(/\\/g, "/");
+
+        if (
+          normalizedPath.startsWith(".git") ||
+          normalizedPath.startsWith("node_modules")
+        ) {
+          statistics.ignoredDirectories += 1;
           return true;
         }
-        return (
-          configIgnore.ignores(relPath) || gitignoreFilter.ignores(relPath)
-        );
+
+        if (isDefaultIgnoredPath(normalizedPath)) {
+          statistics.ignoredDirectories += 1;
+          return true;
+        }
+
+        if (
+          configIgnore.ignores(normalizedPath) ||
+          gitignoreFilter.ignores(normalizedPath)
+        ) {
+          statistics.ignoredDirectories += 1;
+          return true;
+        }
+
+        return false;
       },
     })) {
-      if (!entry.stats.isFile) continue;
-
-      const relPath = entry.relativePath;
-
-      if (gitignoreFilter.ignores(relPath) || configIgnore.ignores(relPath)) {
+      if (!entry.stats.isFile) {
+        statistics.totalDirectories += 1;
         continue;
       }
 
-      const sizeKb = entry.stats.size / 1024;
+      statistics.totalFiles += 1;
+
+      const relPath = entry.relativePath;
+
+      if (
+        isDefaultIgnoredPath(relPath) ||
+        gitignoreFilter.ignores(relPath) ||
+        configIgnore.ignores(relPath)
+      ) {
+        statistics.ignoredFiles += 1;
+        continue;
+      }
+
+      const sizeBytes = entry.stats.size;
+      const sizeKb = sizeBytes / 1024;
+
       if (sizeKb > config.maxFileSizeKb) {
+        statistics.oversizedFiles += 1;
         continue;
       }
 
       if (await isBinaryFile(entry.path)) {
+        statistics.binaryFiles += 1;
         continue;
       }
 
       const lang = detectLanguage(entry.path);
 
       if (config.languages.length > 0 && !config.languages.includes(lang)) {
+        statistics.ignoredFiles += 1;
         continue;
       }
 
@@ -96,37 +134,60 @@ export class CodebaseScanner {
         name: entry.name,
         extension: ext,
         language: lang,
-        sizeBytes: entry.stats.size,
+        sizeBytes,
         contentHash: hash,
         isTestFile: isTestFile(relPath),
         isIgnored: false,
       };
 
       files.push(descriptor);
+
       languageCounts[lang] = (languageCounts[lang] ?? 0) + 1;
+
+      if (ext) {
+        extensionCounts[ext] = (extensionCounts[ext] ?? 0) + 1;
+      }
+
+      statistics.totalBytes += sizeBytes;
     }
 
     return {
       repositoryRoot: rootPath,
       totalFilesDiscovered: files.length,
+      totalDirectories: statistics.totalDirectories,
       byLanguage: languageCounts,
+      byExtension: extensionCounts,
       files,
+      statistics,
       durationMs: Date.now() - startTime,
     };
   }
 
+  private createLanguageCounts(): Record<Language, number> {
+    return Object.values(Language).reduce<Record<Language, number>>(
+      (accumulator, language) => {
+        accumulator[language] = 0;
+        return accumulator;
+      },
+      {} as Record<Language, number>,
+    );
+  }
+
   private async buildGitignoreFilter(rootPath: string): Promise<Ignore> {
-    const ig = getIgnoreInstance();
+    const ignore = getIgnoreInstance();
     const gitignorePath = path.join(rootPath, ".gitignore");
 
     if (await this.fileSystem.exists(gitignorePath)) {
       try {
         const content = await this.fileSystem.readFile(gitignorePath);
-        ig.add(content);
+        ignore.add(content);
       } catch {
-        // Skip unreadable .gitignore
+        // Ignore unreadable .gitignore files.
       }
     }
-    return ig;
+
+    return ignore;
   }
 }
+
+export type { ScanSummary };

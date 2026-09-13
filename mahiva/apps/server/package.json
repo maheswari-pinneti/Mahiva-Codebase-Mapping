@@ -9,14 +9,15 @@
     "build": "tsc --build"
   },
   "dependencies": {
-    "@mahiva/shared": "workspace:*",
-    "@mahiva/query": "workspace:*",
-    "@mahiva/config": "workspace:*",
-    "@mahiva/scanner": "workspace:*",
-    "@mahiva/parser": "workspace:*",
+    "@fastify/rate-limit": "^11.2.0",
     "@mahiva/analyzer": "workspace:*",
-    "@mahiva/relationships": "workspace:*",
+    "@mahiva/config": "workspace:*",
     "@mahiva/graph": "workspace:*",
+    "@mahiva/parser": "workspace:*",
+    "@mahiva/query": "workspace:*",
+    "@mahiva/relationships": "workspace:*",
+    "@mahiva/scanner": "workspace:*",
+    "@mahiva/shared": "workspace:*",
     "fastify": "^5.0.0"
   }
 }

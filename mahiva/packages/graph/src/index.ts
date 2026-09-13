@@ -1,8 +1,5 @@
 import { NodeType, RelationshipType } from "@mahiva/shared";
-import type {
-  GraphEdgeAttributes,
-  GraphNodeAttributes,
-} from "@mahiva/shared";
+import type { GraphEdgeAttributes, GraphNodeAttributes } from "@mahiva/shared";
 import type { RelationshipResult } from "@mahiva/relationships";
 
 export interface GraphTraversalStep {
@@ -58,7 +55,10 @@ export class GraphModel {
 
     this.addNode({
       id: edge.target,
-      type: edge.type === RelationshipType.CONTAINS ? NodeType.SYMBOL : NodeType.FILE,
+      type:
+        edge.type === RelationshipType.CONTAINS
+          ? NodeType.SYMBOL
+          : NodeType.FILE,
       name: edge.target,
       path: edge.target,
       fileId: edge.source,
@@ -74,7 +74,9 @@ export class GraphModel {
   }
 
   public hasEdge(source: string, target: string): boolean {
-    return (this.outgoing.get(source) ?? []).some((edge) => edge.target === target);
+    return (this.outgoing.get(source) ?? []).some(
+      (edge) => edge.target === target,
+    );
   }
 
   public getNode(nodeId: string): GraphNodeAttributes | undefined {
@@ -89,12 +91,19 @@ export class GraphModel {
     return [...(this.incoming.get(nodeId) ?? [])];
   }
 
-  public traverse(startNodeId: string, options: GraphTraversalOptions = {}): GraphTraversalStep[] {
+  public traverse(
+    startNodeId: string,
+    options: GraphTraversalOptions = {},
+  ): GraphTraversalStep[] {
     const maxDepth = options.maxDepth ?? Number.POSITIVE_INFINITY;
-    const includeEdgeTypes = options.includeEdgeTypes ? new Set(options.includeEdgeTypes) : null;
+    const includeEdgeTypes = options.includeEdgeTypes
+      ? new Set(options.includeEdgeTypes)
+      : null;
 
     const visited = new Set<string>([startNodeId]);
-    const queue: Array<{ nodeId: string; depth: number }> = [{ nodeId: startNodeId, depth: 0 }];
+    const queue: Array<{ nodeId: string; depth: number }> = [
+      { nodeId: startNodeId, depth: 0 },
+    ];
     const traversal: GraphTraversalStep[] = [{ nodeId: startNodeId, depth: 0 }];
 
     while (queue.length > 0) {
@@ -126,8 +135,13 @@ export class GraphModel {
     return traversal;
   }
 
-  public findDependents(startNodeId: string, maxDepth = Number.POSITIVE_INFINITY): string[] {
-    const queue: Array<{ nodeId: string; depth: number }> = [{ nodeId: startNodeId, depth: 0 }];
+  public findDependents(
+    startNodeId: string,
+    maxDepth = Number.POSITIVE_INFINITY,
+  ): string[] {
+    const queue: Array<{ nodeId: string; depth: number }> = [
+      { nodeId: startNodeId, depth: 0 },
+    ];
     const visited = new Set<string>([startNodeId]);
     const dependents = new Set<string>();
 
@@ -163,7 +177,9 @@ export class GraphModel {
   }
 }
 
-export function buildGraph(relationshipResults: RelationshipResult[]): GraphModel {
+export function buildGraph(
+  relationshipResults: RelationshipResult[],
+): GraphModel {
   return new GraphModel(relationshipResults);
 }
 

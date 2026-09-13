@@ -14,7 +14,7 @@ export interface AstVisitorContext {
 
 export type AstVisitorCallback = (
   node: NormalizedAstNode,
-  context: AstVisitorContext
+  context: AstVisitorContext,
 ) => WalkAction | void;
 
 /**
@@ -24,7 +24,7 @@ export function walkAst(
   root: NormalizedAstNode,
   callback: AstVisitorCallback,
   ancestors: NormalizedAstNode[] = [],
-  depth = 0
+  depth = 0,
 ): WalkAction {
   const context: AstVisitorContext = {
     depth,

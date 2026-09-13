@@ -18,8 +18,12 @@ describe("@mahiva/filesystem", () => {
   });
 
   it("normalizes paths across Windows and POSIX formats", () => {
-    expect(normalizePath("src\\components\\Button.tsx")).toBe("src/components/Button.tsx");
-    expect(normalizePath("src/components/Button.tsx")).toBe("src/components/Button.tsx");
+    expect(normalizePath("src\\components\\Button.tsx")).toBe(
+      "src/components/Button.tsx",
+    );
+    expect(normalizePath("src/components/Button.tsx")).toBe(
+      "src/components/Button.tsx",
+    );
     expect(normalizePath("")).toBe("");
   });
 
@@ -44,9 +48,18 @@ describe("@mahiva/filesystem", () => {
   });
 
   it("walks directories recursively while respecting skip filters", async () => {
-    await fileSystem.writeFile(path.join(tempDir, "src", "index.ts"), "export {}");
-    await fileSystem.writeFile(path.join(tempDir, "src", "utils", "helper.ts"), "export {}");
-    await fileSystem.writeFile(path.join(tempDir, "node_modules", "package", "index.js"), "{}");
+    await fileSystem.writeFile(
+      path.join(tempDir, "src", "index.ts"),
+      "export {}",
+    );
+    await fileSystem.writeFile(
+      path.join(tempDir, "src", "utils", "helper.ts"),
+      "export {}",
+    );
+    await fileSystem.writeFile(
+      path.join(tempDir, "node_modules", "package", "index.js"),
+      "{}",
+    );
 
     const discovered: string[] = [];
     for await (const entry of fileSystem.walk(tempDir, {

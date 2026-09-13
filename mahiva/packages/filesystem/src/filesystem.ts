@@ -25,7 +25,10 @@ export class NodeFileSystem implements IFileSystem {
     return fs.readFile(targetPath);
   }
 
-  public async writeFile(targetPath: string, content: string | Buffer): Promise<void> {
+  public async writeFile(
+    targetPath: string,
+    content: string | Buffer,
+  ): Promise<void> {
     const dir = path.dirname(targetPath);
     await fs.mkdir(dir, { recursive: true });
     await fs.writeFile(targetPath, content);
@@ -47,13 +50,16 @@ export class NodeFileSystem implements IFileSystem {
     return computeFileHash(targetPath);
   }
 
-  public async *walk(rootDir: string, options: WalkOptions = {}): AsyncIterable<WalkEntry> {
+  public async *walk(
+    rootDir: string,
+    options: WalkOptions = {},
+  ): AsyncIterable<WalkEntry> {
     const normalizedRoot = this.normalizePath(path.resolve(rootDir));
     const maxDepth = options.maxDepth ?? Number.POSITIVE_INFINITY;
 
     async function* recurse(
       currentDir: string,
-      currentDepth: number
+      currentDepth: number,
     ): AsyncIterable<WalkEntry> {
       if (currentDepth > maxDepth) return;
 
@@ -66,7 +72,9 @@ export class NodeFileSystem implements IFileSystem {
 
       for (const entry of entries) {
         const fullPath = normalizePath(path.join(currentDir, entry.name));
-        const relativePath = normalizePath(path.relative(normalizedRoot, fullPath));
+        const relativePath = normalizePath(
+          path.relative(normalizedRoot, fullPath),
+        );
         const isDirectory = entry.isDirectory();
 
         if (options.skip && options.skip(relativePath, isDirectory)) {

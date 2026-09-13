@@ -13,9 +13,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "references": [
-    { "path": "../shared" },
-    { "path": "../parser" }
-  ],
+  "references": [{ "path": "../shared" }, { "path": "../parser" }],
   "include": ["src/**/*"]
 }

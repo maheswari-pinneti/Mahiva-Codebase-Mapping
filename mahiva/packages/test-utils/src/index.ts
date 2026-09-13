@@ -11,7 +11,7 @@ export function createSourceRange(
   endLine = 1,
   endColumn = 1,
   startOffset = 0,
-  endOffset = 0
+  endOffset = 0,
 ): SourceRange {
   return {
     start: {
@@ -28,7 +28,7 @@ export function createSourceRange(
 }
 
 export function createNormalizedAstNode(
-  overrides: Partial<NormalizedAstNode> = {}
+  overrides: Partial<NormalizedAstNode> = {},
 ): NormalizedAstNode {
   return {
     id: overrides.id ?? "node-1",
@@ -42,7 +42,7 @@ export function createNormalizedAstNode(
 }
 
 export function createParsedSourceFile(
-  overrides: Partial<ParsedSourceFile> = {}
+  overrides: Partial<ParsedSourceFile> = {},
 ): ParsedSourceFile {
   return {
     fileId: overrides.fileId ?? "src/index.ts",
@@ -57,4 +57,3 @@ export function createParsedSourceFile(
 export const createMockParsedSourceFile = createParsedSourceFile;
 
 export const PACKAGE_NAME = "@mahiva/test-utils";
-

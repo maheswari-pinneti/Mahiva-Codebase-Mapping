@@ -1,6 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { AstSymbolExtractor } from "../src/index.js";
-import { Language, ParsedSourceFile, SymbolKind, Visibility } from "@mahiva/shared";
+import {
+  Language,
+  ParsedSourceFile,
+  SymbolKind,
+  Visibility,
+} from "@mahiva/shared";
 
 describe("@mahiva/symbols - AstSymbolExtractor", () => {
   const extractor = new AstSymbolExtractor();
@@ -91,7 +96,9 @@ describe("@mahiva/symbols - AstSymbolExtractor", () => {
     expect(methodSym).toBeDefined();
     expect(methodSym?.kind).toBe(SymbolKind.METHOD);
     expect(methodSym?.isAsync).toBe(true);
-    expect(methodSym?.signature).toBe("login(credentials: Credentials): Promise<Session>");
+    expect(methodSym?.signature).toBe(
+      "login(credentials: Credentials): Promise<Session>",
+    );
     expect(methodSym?.visibility).toBe(Visibility.PUBLIC);
 
     const propSym = table.byCanonicalName.get("AuthService.tokenSecret");

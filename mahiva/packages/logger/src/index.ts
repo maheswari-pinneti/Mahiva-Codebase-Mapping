@@ -77,7 +77,9 @@ export class MahivaLogger {
     }[level];
 
     const reset = "\u001b[0m";
-    console.log(`${color}${prefix}${level.toUpperCase()}${reset} ${entry.message}`);
+    console.log(
+      `${color}${prefix}${level.toUpperCase()}${reset} ${entry.message}`,
+    );
   }
 }
 
@@ -88,4 +90,3 @@ export function createLogger(options: LoggerOptions = {}): MahivaLogger {
 export const logger = createLogger({ prefix: "mahiva" });
 
 export const PACKAGE_NAME = "@mahiva/logger";
-

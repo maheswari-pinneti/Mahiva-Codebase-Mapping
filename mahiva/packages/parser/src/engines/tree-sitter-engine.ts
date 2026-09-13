@@ -1,4 +1,9 @@
-import { Language, ParsedSourceFile, NormalizedAstNode, SourceRange } from "@mahiva/shared";
+import {
+  Language,
+  ParsedSourceFile,
+  NormalizedAstNode,
+  SourceRange,
+} from "@mahiva/shared";
 import { LanguageRegistry, defaultLanguageRegistry } from "@mahiva/languages";
 import { IParserEngine, ParseOptions } from "../types.js";
 
@@ -30,7 +35,11 @@ export class TreeSitterParserEngine implements IParserEngine {
 
     const fullRange: SourceRange = {
       start: { line: 1, column: 1, offset: 0 },
-      end: { line: totalLines, column: lastLineLength + 1, offset: sourceText.length },
+      end: {
+        line: totalLines,
+        column: lastLineLength + 1,
+        offset: sourceText.length,
+      },
     };
 
     const rootNode: NormalizedAstNode = {

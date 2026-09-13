@@ -40,7 +40,7 @@ export class InMemoryDatabase {
             fileId = excluded.fileId,
             kind = excluded.kind,
             metadata = excluded.metadata
-        `
+        `,
       )
       .run(this.serializeNode(node));
   }
@@ -57,7 +57,7 @@ export class InMemoryDatabase {
             target = excluded.target,
             weight = excluded.weight,
             metadata = excluded.metadata
-        `
+        `,
       )
       .run(this.serializeEdge(edge));
   }
@@ -69,7 +69,7 @@ export class InMemoryDatabase {
           SELECT id, type, name, path, fileId, kind, metadata
           FROM graph_nodes
           WHERE id = ?
-        `
+        `,
       )
       .get(nodeId) as
       | {
@@ -93,16 +93,16 @@ export class InMemoryDatabase {
           SELECT id, type, source, target, weight, metadata
           FROM graph_edges
           ORDER BY id
-        `
+        `,
       )
       .all() as Array<{
-        id: string;
-        type: GraphEdgeAttributes["type"];
-        source: string;
-        target: string;
-        weight: number | null;
-        metadata: string | null;
-      }>;
+      id: string;
+      type: GraphEdgeAttributes["type"];
+      source: string;
+      target: string;
+      weight: number | null;
+      metadata: string | null;
+    }>;
 
     return rows.map((row) => this.deserializeEdge(row));
   }
@@ -114,17 +114,17 @@ export class InMemoryDatabase {
           SELECT id, type, name, path, fileId, kind, metadata
           FROM graph_nodes
           ORDER BY id
-        `
+        `,
       )
       .all() as Array<{
-        id: string;
-        type: GraphNodeAttributes["type"];
-        name: string;
-        path: string | null;
-        fileId: string | null;
-        kind: string | null;
-        metadata: string | null;
-      }>;
+      id: string;
+      type: GraphNodeAttributes["type"];
+      name: string;
+      path: string | null;
+      fileId: string | null;
+      kind: string | null;
+      metadata: string | null;
+    }>;
 
     return rows.map((row) => this.deserializeNode(row));
   }
@@ -210,7 +210,9 @@ export class InMemoryDatabase {
       path: row.path ?? undefined,
       fileId: row.fileId ?? undefined,
       kind: row.kind ?? undefined,
-      metadata: row.metadata ? (JSON.parse(row.metadata) as Record<string, unknown>) : undefined,
+      metadata: row.metadata
+        ? (JSON.parse(row.metadata) as Record<string, unknown>)
+        : undefined,
     };
   }
 
@@ -228,12 +230,16 @@ export class InMemoryDatabase {
       source: row.source,
       target: row.target,
       weight: row.weight ?? undefined,
-      metadata: row.metadata ? (JSON.parse(row.metadata) as Record<string, unknown>) : undefined,
+      metadata: row.metadata
+        ? (JSON.parse(row.metadata) as Record<string, unknown>)
+        : undefined,
     };
   }
 }
 
-export function createDatabase(options: DatabaseOptions = {}): InMemoryDatabase {
+export function createDatabase(
+  options: DatabaseOptions = {},
+): InMemoryDatabase {
   return new InMemoryDatabase(options);
 }
 

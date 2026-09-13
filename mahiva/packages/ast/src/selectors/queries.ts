@@ -1,14 +1,15 @@
 import { NormalizedAstNode, SymbolKind } from "@mahiva/shared";
 import { walkAst, WalkAction } from "../traversal/visitor.js";
 
-export type AstNodeKind = SymbolKind | "root" | "call_expression" | "import_clause" | "export_clause";
+export type AstNodeKind =
+  SymbolKind | "root" | "call_expression" | "import_clause" | "export_clause";
 
 /**
  * Finds all nodes matching one or more specific AST kinds.
  */
 export function findNodesByKind(
   root: NormalizedAstNode,
-  kinds: AstNodeKind | AstNodeKind[]
+  kinds: AstNodeKind | AstNodeKind[],
 ): NormalizedAstNode[] {
   const targetKinds = new Set(Array.isArray(kinds) ? kinds : [kinds]);
   const results: NormalizedAstNode[] = [];
@@ -28,7 +29,7 @@ export function findNodesByKind(
 export function findNodeByName(
   root: NormalizedAstNode,
   name: string,
-  kind?: AstNodeKind
+  kind?: AstNodeKind,
 ): NormalizedAstNode | undefined {
   let found: NormalizedAstNode | undefined;
 
@@ -59,6 +60,8 @@ export function getDescendants(node: NormalizedAstNode): NormalizedAstNode[] {
 /**
  * Finds all function calls and method invocation nodes inside a given tree.
  */
-export function findCallExpressions(root: NormalizedAstNode): NormalizedAstNode[] {
+export function findCallExpressions(
+  root: NormalizedAstNode,
+): NormalizedAstNode[] {
   return findNodesByKind(root, "call_expression");
 }

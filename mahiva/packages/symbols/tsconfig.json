@@ -13,9 +13,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "references": [
-    { "path": "../shared" },
-    { "path": "../ast" }
-  ],
+  "references": [{ "path": "../shared" }, { "path": "../ast" }],
   "include": ["src/**/*"]
 }

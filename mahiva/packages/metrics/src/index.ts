@@ -16,7 +16,11 @@ export interface RecordMetricOptions {
 export class MetricsCollector {
   private readonly metrics = new Map<string, MetricRecord>();
 
-  public record(name: string, value: number, options: RecordMetricOptions = {}): void {
+  public record(
+    name: string,
+    value: number,
+    options: RecordMetricOptions = {},
+  ): void {
     const current = this.metrics.get(name);
 
     if (!current) {
@@ -64,4 +68,3 @@ export function createMetricsCollector(): MetricsCollector {
 }
 
 export const PACKAGE_NAME = "@mahiva/metrics";
-

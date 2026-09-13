@@ -61,7 +61,9 @@ export class LanguageRegistry {
 
     const def = this.getByLanguage(language);
     if (!def || !def.treeSitterGrammarName) {
-      throw new Error(`Language '${language}' does not define a Tree-sitter grammar`);
+      throw new Error(
+        `Language '${language}' does not define a Tree-sitter grammar`,
+      );
     }
 
     return this.grammarLoader.loadGrammar(def.treeSitterGrammarName);

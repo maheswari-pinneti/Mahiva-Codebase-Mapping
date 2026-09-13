@@ -36,7 +36,9 @@ describe("@mahiva/languages - LanguageRegistry", () => {
     const rsDef = registry.getByFilePath("crates/engine/main.rs");
     expect(rsDef?.id).toBe(Language.RUST);
 
-    const javaDef = registry.getByFilePath("src/main/java/com/example/App.java");
+    const javaDef = registry.getByFilePath(
+      "src/main/java/com/example/App.java",
+    );
     expect(javaDef?.id).toBe(Language.JAVA);
 
     const yamlDef = registry.getByFilePath("config/deploy.yaml");
@@ -77,7 +79,7 @@ describe("@mahiva/languages - LanguageRegistry", () => {
 
   it("throws descriptive error when loading grammar without loader", async () => {
     await expect(registry.loadGrammarFor(Language.TYPESCRIPT)).rejects.toThrow(
-      /Grammar loader not configured/
+      /Grammar loader not configured/,
     );
   });
 });

@@ -79,11 +79,15 @@ export class RelationshipBuilder {
 
 export const defaultRelationshipBuilder = new RelationshipBuilder();
 
-export function buildRelationships(parsedFile: ParsedSourceFile): RelationshipResult {
+export function buildRelationships(
+  parsedFile: ParsedSourceFile,
+): RelationshipResult {
   return defaultRelationshipBuilder.build(parsedFile);
 }
 
-export function buildRelationshipsForFiles(parsedFiles: ParsedSourceFile[]): RelationshipResult[] {
+export function buildRelationshipsForFiles(
+  parsedFiles: ParsedSourceFile[],
+): RelationshipResult[] {
   return defaultRelationshipBuilder.buildMany(parsedFiles);
 }
 

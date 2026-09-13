@@ -8,7 +8,9 @@ import { detectLanguage, isTestFile } from "./classifier.js";
 
 // Ensure callable function reference regardless of CJS/ESM interop
 const getIgnoreInstance = (): Ignore => {
-  const fn = (createIgnore as unknown as { default?: () => Ignore }).default ?? createIgnore;
+  const fn =
+    (createIgnore as unknown as { default?: () => Ignore }).default ??
+    createIgnore;
   return (fn as unknown as () => Ignore)();
 };
 
@@ -36,13 +38,15 @@ export class CodebaseScanner {
     configIgnore.add(config.exclude);
 
     const files: FileDescriptor[] = [];
-    
-    const languageCounts = Object.values(Language).reduce<Record<Language, number>>(
+
+    const languageCounts = Object.values(Language).reduce<
+      Record<Language, number>
+    >(
       (acc, lang) => {
         acc[lang] = 0;
         return acc;
       },
-      {} as Record<Language, number>
+      {} as Record<Language, number>,
     );
 
     for await (const entry of this.fileSystem.walk(rootPath, {
@@ -53,7 +57,9 @@ export class CodebaseScanner {
         if (relPath.startsWith(".git") || relPath.startsWith("node_modules")) {
           return true;
         }
-        return configIgnore.ignores(relPath) || gitignoreFilter.ignores(relPath);
+        return (
+          configIgnore.ignores(relPath) || gitignoreFilter.ignores(relPath)
+        );
       },
     })) {
       if (!entry.stats.isFile) continue;

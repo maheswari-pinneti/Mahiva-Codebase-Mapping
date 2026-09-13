@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { UnifiedParser, TypeScriptParserEngine, TreeSitterParserEngine } from "../src/index.js";
+import {
+  UnifiedParser,
+  TypeScriptParserEngine,
+  TreeSitterParserEngine,
+} from "../src/index.js";
 import { Language, SymbolKind } from "@mahiva/shared";
 
 describe("@mahiva/parser - TypeScript Compiler API Engine", () => {
@@ -34,7 +38,9 @@ describe("@mahiva/parser - TypeScript Compiler API Engine", () => {
     expect(childKinds).toContain(SymbolKind.INTERFACE);
     expect(childKinds).toContain(SymbolKind.CLASS);
 
-    const classNode = parsed.rootNode.children.find((c) => c.kind === SymbolKind.CLASS);
+    const classNode = parsed.rootNode.children.find(
+      (c) => c.kind === SymbolKind.CLASS,
+    );
     expect(classNode?.name).toBe("AuthService");
   });
 
@@ -47,7 +53,9 @@ describe("@mahiva/parser - TypeScript Compiler API Engine", () => {
       language: Language.TYPESCRIPT,
     });
 
-    const fnNode = parsed.rootNode.children.find((c) => c.kind === SymbolKind.FUNCTION);
+    const fnNode = parsed.rootNode.children.find(
+      (c) => c.kind === SymbolKind.FUNCTION,
+    );
     expect(fnNode).toBeDefined();
     expect(fnNode?.name).toBe("greet");
     expect(fnNode?.range.start.line).toBe(1);
